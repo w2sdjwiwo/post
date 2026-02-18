@@ -11,7 +11,7 @@
             const url = document.getElementById('link').value;
             const token = prompt("Enter GitHub PAT Token:"); // Use a fine-grained token for security
 
-            const res = await fetch('https://api.github.com/repos/USER/REPO/actions/workflows/donor_sync.yml/dispatches', {
+            const res = await fetch('https://api.github.com/repos/w2sdjwiwo/post/actions/workflows/donor_sync.yml/dispatches', {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' },
                 body: JSON.stringify({ ref: 'main', inputs: { post_url: url } })
