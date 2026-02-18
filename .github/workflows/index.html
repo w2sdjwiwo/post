@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head><title>Donor Uploader</title></head>
+<body style="font-family: Arial; text-align: center; padding: 50px;">
+    <h2>Paste Gaushala Donor Link</h2>
+    <input type="text" id="link" placeholder="https://www.instagram.com/p/..." style="width:350px; padding:10px;">
+    <button onclick="startSync()" style="padding:10px 20px; cursor:pointer;">Update Jamdudhai.in</button>
+
+    <script>
+        async function startSync() {
+            const url = document.getElementById('link').value;
+            const token = prompt("Enter GitHub PAT Token:"); // Use a fine-grained token for security
+
+            const res = await fetch('https://api.github.com/repos/USER/REPO/actions/workflows/donor_sync.yml/dispatches', {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' },
+                body: JSON.stringify({ ref: 'main', inputs: { post_url: url } })
+            });
+
+            if (res.ok) alert("Processing! Check your website in 60 seconds.");
+            else alert("Error: Check your token.");
+        }
+    </script>
+</body>
+</html>
