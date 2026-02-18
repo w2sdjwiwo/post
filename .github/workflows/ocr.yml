@@ -1,5 +1,8 @@
 name: Auto OCR Instagram Donors
 
+permissions:
+  contents: write
+
 on:
   schedule:
     - cron: "*/10 * * * *"
@@ -39,3 +42,4 @@ jobs:
           git add donors.json
           git commit -m "Auto update donors" || echo "No changes to commit"
           git push
+
