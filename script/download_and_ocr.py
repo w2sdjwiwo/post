@@ -13,16 +13,24 @@ OUTPUT_JSON = "donors.json"
 
 
 def get_latest_image_url():
-    """Fetch latest Instagram image URL from public page HTML"""
-    response = requests.get(INSTAGRAM_URL, headers={"User-Agent": "Mozilla/5.0"})
-    html = response.text
+    """
+    Uses Instagram oEmbed to fetch thumbnail image
+    """
+    oembed_url = "https://api.instagram.com/oembed/?url=" + INSTAGRAM_URL
+    response = requests.get(oembed_url)
 
-    match = re.search(r'"display_url":"(.*?)"', html)
-    if not match:
-        print("❌ No image found on page")
+    if response.status_code != 200:
+        print("❌ oEmbed request failed")
         return None
 
-    return match.group(1).replace("\\u0026", "&")
+    data = response.json()
+
+    if "thumbnail_url" not in data:
+        print("❌ No thumbnail found")
+        return None
+
+    return data["thumbnail_url"]
+
 
 
 def download_image(url):
