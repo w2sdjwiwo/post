@@ -1,0 +1,41 @@
+name: Auto OCR Instagram Donors
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Tesseract OCR
+        run: |
+          sudo apt update
+          sudo apt install -y tesseract-ocr
+          sudo apt install -y tesseract-ocr-guj
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Python dependencies
+        run: |
+          pip install -r script/requirements.txt
+
+      - name: Run OCR Script
+        run: |
+          python script/download_and_ocr.py
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git add donors.json
+          git commit -m "Auto update donors" || echo "No changes to commit"
+          git push
