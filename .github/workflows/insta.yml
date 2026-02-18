@@ -1,0 +1,37 @@
+name: Instagram Auto Download
+
+on:
+  schedule:
+    - cron: "0 * * * *"   # every 1 hour
+  workflow_dispatch:
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install Instaloader
+        run: pip install instaloader
+
+      - name: Login & Download
+        env:
+          IG_USERNAME: ${{ secrets.IG_USERNAME }}
+          IG_PASSWORD: ${{ secrets.IG_PASSWORD }}
+        run: |
+          instaloader --login=$IG_USERNAME --password=$IG_PASSWORD targetprofile --count 1 --no-videos
+
+      - name: Commit Files
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git add .
+          git commit -m "Auto download latest post" || echo "No changes"
+          git push
