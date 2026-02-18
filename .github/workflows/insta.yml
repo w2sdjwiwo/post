@@ -26,7 +26,7 @@ jobs:
           IG_USERNAME: ${{ secrets.IG_USERNAME }}
           IG_PASSWORD: ${{ secrets.IG_PASSWORD }}
         run: |
-          instaloader --login=$IG_USERNAME --password=$IG_PASSWORD targetprofile --count 1 --no-videos
+          instaloader --login=$IG_USERNAME --password=$IG_PASSWORD shreeramgaushala --count 1 --no-videos
 
       - name: Commit Files
         run: |
