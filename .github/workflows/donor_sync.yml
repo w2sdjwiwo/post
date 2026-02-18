@@ -1,0 +1,22 @@
+name: Sync Donor Post
+on:
+  workflow_dispatch:
+    inputs:
+      post_url:
+        description: 'Instagram Post URL'
+        required: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: |
+          sudo apt-get install -y tesseract-ocr
+          pip install instaloader pytesseract firebase-admin Pillow
+      - name: Run Sync
+        env:
+          POST_URL: ${{ github.event.inputs.post_url }}
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: python main.py
